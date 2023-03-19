@@ -8,6 +8,7 @@ import { FaMapMarkerAlt, FaClock, FaHourglassHalf } from "react-icons/fa";
 
 // Enum & Interface
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"
 import Props from "../interface/props.interface"
 
 // theme
@@ -19,24 +20,6 @@ import { DARK, LIGHT } from "../theme/theme";
 import { getEvent } from "../network/api/axios.custom"
 
 // import { BuildingName } from "../component/building/buildingName"
-
-const eventData = {
-  title: "안녕하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-  typeId: 1,
-  context: "마크다운이 들어갈 곳",
-  locationCode: "PL0200",
-  locationName: "운동장",
-  dates: [
-    {
-      startAt: "2023-03-16T09:00:00.000",
-      term: 100
-    },
-    {
-      startAt: "2023-03-17T09:00:00.000",
-      term: 100
-    }
-  ]
-}
 
 const ContentWrapper = styled.div<Props>`
   display: flex;
@@ -93,42 +76,43 @@ export function ContainerContents({
   toggleDarkMode: Function;
   eventId: any;
 }) {
-  const [data, setData] = useState(eventData);
+  const [eventData, setEventData] = useState(null);
   useEffect(() => {
-    const fetchContext = async () => {
-      //const data = await getEvent(eventId);
-      setData(data);
-    };
-    fetchContext();
-  }, [eventId]);
+    getEvent(eventId)
+      .then((event) => {
+        setEventData(event);
+      });
+  }, []);
 
   const dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
   return (
+    eventData ? (
       <ContentWrapper className="contents" darkMode={darkMode}>
-      <Title>{data.title}</Title>
+      <Title>{eventData.title}</Title>
         <Divider darkMode={darkMode} />
         <DateTime>
           <Icon>
             <FaClock />
           </Icon>
-          {new Date(data.dates[0].startAt).toLocaleDateString("en-US", dateFormat)}
+          {new Date(eventData.dates[0].startAt).toLocaleDateString("en-US", dateFormat)}
         </DateTime>
         <DateTime>
           <Icon>
             <FaHourglassHalf />
           </Icon>
-          {data.dates[0].term.toString()}min
+          {eventData.dates[0].term.toString()}min
         </DateTime>
         <IconWrapper>
           <Icon>
             <FaMapMarkerAlt />
           </Icon>
-          <Location>{data.locationName}</Location>
+          <Location>{eventData.locationName}</Location>
         </IconWrapper>
         <Divider darkMode={darkMode} />
-        <ReactMarkdown>{data.context}</ReactMarkdown>
+        <ReactMarkdown children={eventData.context.replaceAll()} remarkPlugins={[remarkGfm]} />
         <Divider darkMode={darkMode} />
       </ContentWrapper>
+    ) : (<div>loading...</div>)
   );
 }
