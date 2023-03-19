@@ -45,14 +45,6 @@ export function ContainerContents(
   }
 ) {
   const { darkMode, toggleDarkMode } = props;
-  const [location, setLocation] = useState<Ilocation[]>([]);
-
-  useEffect(() => {
-    getLocations().then((response: any) => {
-      console.log("response: ", response);
-      setLocation(response);
-    });
-  }, []);
 
   return (
     <Contents className="contents" darkMode={darkMode}>

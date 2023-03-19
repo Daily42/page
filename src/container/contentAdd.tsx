@@ -13,10 +13,9 @@ import { DARK, LIGHT } from "../theme/theme";
 import Props from "../interface/props.interface";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import placeType from "../enum/placeType.enum";
-import Idate, { IDateObject} from "../interface/date.interface";
+import Idate, { IDateObject } from "../interface/date.interface";
 import Ipost from "../interface/post.interface";
 import PlaceType from "../enum/placeType.enum";
-
 
 const Contents = styled.div<Props>`
   height: calc(100% - 50px);
@@ -28,7 +27,6 @@ const Contents = styled.div<Props>`
   justify-content: left;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
   background-color: ${(props) => (props.darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND)};
-  padding: 3vh;
   overflow-x: hidden;
   overflow-y: scroll;
   &::-webkit-scrollbar {

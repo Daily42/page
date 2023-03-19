@@ -22,11 +22,11 @@ function App() {
         styles={css`
           body {
             background-color: ${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND};
-            transition-duration: 1.5s;
+            transition-duration: 0.3s;
           }
           .view {
             background-color: ${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND} !important;
-            transition-duration: 1.5s;
+            transition-duration: 1s;
           }
         `}
       />

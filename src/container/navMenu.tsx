@@ -18,7 +18,7 @@ const Container = styled.div<Props>`
   padding: 0 10px;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
   text-shadow: 0.5px 0.5px 2px ${(props) => (props.darkMode ? DARK.SHADOW : LIGHT.SHADOW)};
-  transition-duration: 1s;
+  transition-duration: 0s;
 `;
 
 interface ButtonProps {
@@ -65,7 +65,6 @@ const Title = styled.div<Props>`
   font-size: 1.2rem;
   cursor: pointer;
   text-shadow: 0.2px 0.2px 4px ${(props) => (props.darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW)};
-  #transition-duration: 0.5s;
   &:hover {
     #font-weight: 500;
     text-shadow: 1px 1px 1px ${(props) => (props.darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW)};

@@ -1,6 +1,7 @@
+/* eslint-disable quote-props */
 /* eslint-disable react/jsx-no-bind */
 // React
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // style library
@@ -18,16 +19,26 @@ import "react-multi-date-picker/styles/colors/teal.css"
 // API
 import { searchEvent, getLocations } from "../network/api/axios.custom";
 
-// Interface
+// Interface & Enum
 import Ievent from "../interface/event.interface";
 import Ilocation from "../interface/location.interface";
 import Props from "../interface/props.interface";
+import PlaceType from "../enum/placeType.enum";
 
 // theme
 import { DARK, LIGHT } from "../theme/theme";
 
 // emotion styles
 const DatePickerInput = styled(DatePicker)<Props>`
+  padding: 16px;
+  font-size: 16px;
+`;
+
+const Dropdown = styled.select<Props>`
+  background-color: ${(props) => (props.darkMode ? DARK.FORM : LIGHT.FORM)};
+  border: none;
+  border-radius: 8px;
+  color: #333;
   padding: 16px;
   font-size: 16px;
 `;
@@ -89,7 +100,7 @@ export function SearchEvents(
     darkMode: boolean,
   }
 ) {
-  // props varaibles
+  // props variables
   const { darkMode } = props;
 
   // mui variables - dates
@@ -97,12 +108,58 @@ export function SearchEvents(
     date: [],
   })
 
+  // mui variables - location
+
   // api variables
+  const [locationName, setLocationName] = useState("");
   const [events, setEvents] = useState<Ievent[]>([]);
   const [locations, setLocations] = useState<Ilocation[]>([]);
+
+  // tmp
   const classes = useStyles(darkMode);
-  const hasRunOnceRef = useRef(false);
   const navigate = useNavigate();
+  const mapList: string[] = [
+    "전체",
+    "개포 클러스터",
+    "서초 클러스터",
+    "기타",
+    "개포 클러스터 - 2층 Cluster 01",
+    "개포 클러스터 - 2층 Cluster 02",
+    "개포 클러스터 - 4층 Cluster 03",
+    "개포 클러스터 - 4층 Cluster 04",
+    "개포 클러스터 - 5층 Cluster 05",
+    "개포 클러스터 - 5층 Cluster 06",
+    "서초 클러스터 - 4층 Cluster 07",
+    "서초 클러스터 - 4층 Cluster 08",
+    "서초 클러스터 - 5층 Cluster 09",
+    "서초 클러스터 - 5층 Cluster 10",
+    "개포 클러스터 - 3층 ClusterX 01",
+    "개포 클러스터 - 3층 ClusterX 02",
+    "개포 클러스터 - 1층 오픈클러스터",
+    "개포 클러스터 - 1층 게임장",
+    "개포 클러스터 - 1층 42Lab",
+  ];
+  const placeTypeMap: { [key: string] : PlaceType } = {
+    "전쳬": PlaceType.null,
+    "개포 클러스터": PlaceType.PL0000,
+    "서초 클러스터": PlaceType.PL0100,
+    "기타": PlaceType.PL0200,
+    "개포 클러스터 - 2층 Cluster 01": PlaceType.PL0001,
+    "개포 클러스터 - 2층 Cluster 02": PlaceType.PL0002,
+    "개포 클러스터 - 4층 Cluster 03": PlaceType.PL0003,
+    "개포 클러스터 - 4층 Cluster 04": PlaceType.PL0004,
+    "개포 클러스터 - 5층 Cluster 05": PlaceType.PL0005,
+    "개포 클러스터 - 5층 Cluster 06": PlaceType.PL0006,
+    "서초 클러스터 - 4층 Cluster 07": PlaceType.PL0007,
+    "서초 클러스터 - 4층 Cluster 08": PlaceType.PL0008,
+    "서초 클러스터 - 5층 Cluster 09": PlaceType.PL0009,
+    "서초 클러스터 - 5층 Cluster 10": PlaceType.PL0010,
+    "개포 클러스터 - 3층 ClusterX 01": PlaceType.PL0011,
+    "개포 클러스터 - 3층 ClusterX 02": PlaceType.PL0012,
+    "개포 클러스터 - 1층 오픈클러스터": PlaceType.PL0013,
+    "개포 클러스터 - 1층 게임장": PlaceType.PL0014,
+    "개포 클러스터 - 1층 42Lab": PlaceType.PL0015,
+  };
 
   let mode = "default";
   if (darkMode === true) {
@@ -111,13 +168,20 @@ export function SearchEvents(
     mode = "default";
   }
 
+  useEffect(() => {
+    getLocations().then((response: any) => {
+      setLocations(response);
+    });
+  }, [locations]);
+
+  // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {
-    const eventResponse = await searchEvent(rangeDate.date[0], rangeDate.date[1]);
-    const locationResponse = await getLocations();
-    if (!hasRunOnceRef.current && locationResponse) {
-      setLocations(locationResponse);
-      hasRunOnceRef.current = true;
+    let locationCode: string = "0";
+    if (locationName !== "") {
+      const location = locations.find((loc) => loc.title === locationName);
+      locationCode = location?.code || "";
     }
+    const eventResponse = await searchEvent(rangeDate.date[0], rangeDate.date[1], locationCode);
     if (eventResponse) {
       setEvents(eventResponse);
     }
@@ -131,7 +195,7 @@ export function SearchEvents(
     <Container
       className={classes.root}
       style={{
-        backgroundColor: `${(darkMode) ? DARK.BACKGROUND : LIGHT.BACKGROUND}`,
+        backgroundColor: `${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND}`,
         marginTop: "30px",
       }}
     >
@@ -139,9 +203,9 @@ export function SearchEvents(
         <Grid item style={{ width: "100%" }} className={classes.form}>
           <DatePickerInput
             style={{
-              backgroundColor: `${(darkMode) ? DARK.FORM : LIGHT.FORM}`,
+              backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
               boxSizing: "border-box",
-              color: `${(darkMode) ? DARK.TEXT : LIGHT.TEXT}`,
+              color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
               border: "none",
               fontSize: "14px",
               height: "32px",
@@ -151,7 +215,7 @@ export function SearchEvents(
               width: "185px",
             }}
             containerStyle={{
-              width: "100%"
+              width: "100%",
             }}
             darkMode={darkMode}
             className={`rmdp-mobile bg-${mode} ${darkMode ? "teal" : "default"}`}
@@ -159,9 +223,7 @@ export function SearchEvents(
             name="date"
             placeholder="날짜를 선택하세요."
             format="YYYY-MM-DD"
-            plugins={[
-              <DatePanel markFocused />
-            ]}
+            plugins={[<DatePanel markFocused />]}
             value={rangeDate.date}
             onChange={(value: any) =>
               setRangeDate((prevFormData) => ({
@@ -170,15 +232,32 @@ export function SearchEvents(
               }))
             }
           />
+          <Dropdown
+            style={{
+              backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
+              color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
+              margin: "1rem",
+              width: "185px",
+            }}
+            id="location-name-input"
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+          >
+            {mapList.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </Dropdown>
           <Button
             style={{
-
             }}
             variant="contained"
             color="primary"
             className={classes.button}
             onClick={handleSearchButtonClick}
-          >Get Events
+          >
+            Get Events
           </Button>
         </Grid>
         {events.length > 0 && (
