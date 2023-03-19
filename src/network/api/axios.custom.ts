@@ -19,10 +19,8 @@ export const searchEvent = async (
   loc: string | null
 ): Promise<Ievent[]> => {
   try {
-    console.log(">", stt, end, loc);
     stt = stt ?? end;
     end = end ?? stt;
-    console.log(">>", stt, end, loc);
     const querys = [
       stt ? `startDate=${stt}` : null,
       end ? `endDate=${end}` : null,

@@ -112,6 +112,18 @@ export function ContainerContents({
     day: "numeric"
   };
 
+  // TODO: 나중에 리팩토링 필요.
+  const toTimeString = (min: number) => {
+    const hours = Math.floor(min / 60);
+    const hourString = hours > 0 ? `${hours} hours` : "";
+    const minutes = min - hours * 60;
+    const minuteString = minutes > 0 ? `${minutes} minutes` : "";
+    if (hourString === "" && hourString === "") {
+      return "all day";
+    }
+    return `for ${hourString} ${minuteString}`;
+  }
+
   return (
     eventData ? (
       <ContentWrapper className="contents" darkMode={darkMode}>
@@ -122,7 +134,7 @@ export function ContainerContents({
         </DateTime>
         <DateTime>
           <Icon><FaHourglassHalf /></Icon>
-          for {eventData.dates[0].term.toString()}min
+          {toTimeString(eventData.dates[0].term)}
         </DateTime>
         <DateTime>
           <Icon><FaMapMarkerAlt /></Icon>

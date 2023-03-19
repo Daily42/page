@@ -136,6 +136,17 @@ function EventsList(
   const [eventType, setEventType] = useState<Ievent[]>([]);
   const classes = useStyles2({ darkMode });
 
+  const toTimeString = (min: number) => {
+    const hours = Math.floor(min / 60);
+    const hourString = hours > 0 ? `${hours} hours` : "";
+    const minutes = min - hours * 60;
+    const minuteString = minutes > 0 ? `${minutes} minutes` : "";
+    if (hourString === "" && hourString === "") {
+      return "all day";
+    }
+    return `for ${hourString} ${minuteString}`;
+  }
+
   // getEventType
   return (
     <List>
@@ -166,7 +177,7 @@ function EventsList(
             </div>
             <div>
               <FaHourglassHalf style={{ fontSize: "16px", opacity: 0.5, margin: 0 }} />&nbsp;
-              for {event.dates[0]?.term} minutes
+              {toTimeString(event.dates[0]?.term)}
             </div>
           </ListItemText>
         </ListItem>
