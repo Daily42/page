@@ -2,7 +2,7 @@
 
 export const LIGHT = {
   HEADER_BACKGROUND: "#dedbdb",
-  BACKGROUND: "#F1F1F1",
+  BACKGROUND: "#F3F3F3",
   TEXT: "#040404",
   SHADOW: "rgba(233,233,233,0.4)",
   TEXT_SHADOW: "rgba(40,40,40,0.4)",

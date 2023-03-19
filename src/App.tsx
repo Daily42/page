@@ -38,6 +38,10 @@ function App() {
             background-color: ${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND} !important;
             transition-duration: 1s;
           }
+          #search-date-picker::placeholder {
+            color: ${darkMode ? DARK.TEXT : LIGHT.TEXT} !important;
+            font-size: 16px;
+          }
         `}
       />
       <BrowserRouter>

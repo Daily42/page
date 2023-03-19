@@ -16,7 +16,12 @@ export const getEventsList = async () => {
 export const searchEvent = async (stt: string, end: string, loc: string): Promise<Ievent[]> => {
   try {
     const date = `startDate=${stt}&endDate=${end}`;
-    const loca = (loc === "0" ? "" : `&locationCode=${loc}`)
+    let loca;
+    if (loc === "0" || loc === PlaceType.null) {
+      loca = "";
+    } else {
+      loca = `&locationCode=${loc}`;
+    }
     console.log(`API:::: /events?${date}${loca}`)
     const response = await axios.instance.get<Ievent[]>(
       `/events?${date}${loca}`

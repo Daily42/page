@@ -17,13 +17,18 @@ import "react-multi-date-picker/styles/backgrounds/bg-dark.css";
 import "react-multi-date-picker/styles/colors/teal.css"
 
 // API
-import { searchEvent, getLocations } from "../network/api/axios.custom";
+import {
+  searchEvent,
+  getLocations,
+  getEventType
+} from "../network/api/axios.custom";
 
 // Interface & Enum
 import Ievent from "../interface/event.interface";
 import Ilocation from "../interface/location.interface";
 import Props from "../interface/props.interface";
 import PlaceType from "../enum/placeType.enum";
+import Itype from "../interface/type.interface";
 
 // theme
 import { DARK, LIGHT } from "../theme/theme";
@@ -31,7 +36,7 @@ import { DARK, LIGHT } from "../theme/theme";
 // emotion styles
 const DatePickerInput = styled(DatePicker)<Props>`
   padding: 16px;
-  font-size: 16px;
+  border: none !important;
 `;
 
 const Dropdown = styled.select<Props>`
@@ -41,27 +46,22 @@ const Dropdown = styled.select<Props>`
   border-radius: 8px;
   padding: 16px;
   font-size: 16px;
+  width: 28.5vw;
+  min-width: 200px;
+  marginLeft: 1vw;
+  marginRight: 1vw;
+  transition: all 0.5s;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
-
-  &::placeholder {
-    color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
-  }
 `;
-
-// style={{
-//   backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
-//   color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
-//   margin: "1rem",
-//   width: "185px",
-// }}
 
 const useStyles = makeStyles({
   root: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "baseline",
     justifyContent: "center",
     height: "100vh",
     backgroundColor: "#f5f5f5",
+    maxWidth: "none",
   },
   title: {
     marginBottom: "1rem",
@@ -78,7 +78,39 @@ const useStyles = makeStyles({
   list: {
     marginTop: "2rem",
   },
+  inputArea: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "1rem",
+  },
 });
+
+const useStyles2 = makeStyles((theme) => ({
+  list: {
+    width: "100%",
+    maxWidth: "90%",
+    marginLeft: "5%",
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: "4px",
+  },
+  listItem: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    "&:hover": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+  listItemText: {
+    color: (props: any) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT),
+  },
+}));
+
+const EventName = styled.div`
+  margin: 0;
+  font-family: OAGothic;
+  font-weight: 800;
+  font-size: 1.3rem;
+`;
 
 function getBuildingTitle(locationCode: string, locationList: Ilocation[]) {
   const location = locationList.find((loc) => loc.code === locationCode) || { title: "" };
@@ -88,19 +120,40 @@ function getBuildingTitle(locationCode: string, locationList: Ilocation[]) {
 function EventsList(
   props: {
     events: Ievent[],
-    locations: Ilocation[],
-    onEventItemClick: (eventId: number) => void
+    onEventItemClick: (eventId: number) => void,
+    darkMode: boolean,
   }
 ) {
-  const { events, locations, onEventItemClick } = props;
+  const { events, onEventItemClick, darkMode } = props;
+  const [eventType, setEventType] = useState<Ievent[]>([]);
+  const classes = useStyles2({ darkMode });
+
+  // getEventType
   return (
     <List>
       {events.map((event) => (
-        <ListItem button key={event.id} onClick={() => onEventItemClick(event.id)}>
+        <ListItem
+          button
+          key={event.id}
+          onClick={() => onEventItemClick(event.id)}
+          style={{
+            width: "90%",
+            marginLeft: "5%",
+          }}
+        >
           <ListItemText
-            primary={event.title}
-            secondary={`${event.location.parent?.title} > ${getBuildingTitle(event.locationCode, locations)}`}
-          />
+            className={classes.listItemText}
+          >
+            <EventName>
+              {event.title}
+            </EventName>
+            <div>
+              {event.location.parent?.title}
+              {event.location.parent?.title ? " > " : ""}
+              <b>{event.location.title}</b>
+              {event.location.code === PlaceType.PL0200 ? ` : ${event.locationName}` : ""}
+            </div>
+          </ListItemText>
         </ListItem>
       ))}
     </List>
@@ -131,7 +184,7 @@ export function SearchEvents(
   const classes = useStyles(darkMode);
   const navigate = useNavigate();
   const mapList: string[] = [
-    "전체",
+    "장소를 선택하세요. (전체)",
     "개포 클러스터",
     "서초 클러스터",
     "기타",
@@ -152,7 +205,7 @@ export function SearchEvents(
     "개포 클러스터 - 1층 42Lab",
   ];
   const placeTypeMap: { [key: string] : PlaceType } = {
-    "전쳬": PlaceType.null,
+    "장소를 선택하세요. (전체)": PlaceType.null,
     "개포 클러스터": PlaceType.PL0000,
     "서초 클러스터": PlaceType.PL0100,
     "기타": PlaceType.PL0200,
@@ -181,7 +234,6 @@ export function SearchEvents(
   }
 
   useEffect(() => {
-    console.log("CALLED!")
     getLocations().then((response: any) => {
       setLocations(response);
     });
@@ -189,7 +241,6 @@ export function SearchEvents(
 
   // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {
-    console.log("CLICKED!");
     let locationCode: string = "0";
     if (locationName !== "") {
       const location = locations.find((loc) => loc.title === locationName);
@@ -213,68 +264,105 @@ export function SearchEvents(
         marginTop: "30px",
       }}
     >
-      <Grid container direction="column" alignItems="baseline">
-        <Grid item style={{ width: "100%" }} className={classes.form}>
-          <DatePickerInput
+      <Grid container direction="column">
+        <div className={classes.inputArea}>
+          <Grid
             style={{
-              backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
-              boxSizing: "border-box",
-              color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
-              border: `0.3px solid ${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
-              fontSize: "14px",
-              height: "32px",
-              lineHeight: "32px",
-              padding: "4px 11px",
-              transition: "all 0.3s",
-              width: "185px",
-            }}
-            containerStyle={{
+              textAlign: "center",
               width: "100%",
+              margin: "0",
             }}
-            darkMode={darkMode}
-            className={`rmdp-mobile bg-${mode} ${darkMode ? "teal" : "default"}`}
-            range
-            name="date"
-            placeholder="날짜를 선택하세요."
-            format="YYYY-MM-DD"
-            plugins={[<DatePanel markFocused />]}
-            value={rangeDate.date}
-            onChange={(value: any) =>
-              setRangeDate((prevFormData) => ({
-                ...prevFormData,
-                date: value,
-              }))
-            }
-          />
-          <Dropdown
-            darkMode={darkMode}
-            id="location-name-input"
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={2}
           >
-            {mapList.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Dropdown>
-          <Button
-            style={{
-            }}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSearchButtonClick}
-          >
-            Get Events
-          </Button>
-        </Grid>
+            <Grid item>
+              <DatePickerInput
+                style={{
+                  backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
+                  boxSizing: "border-box",
+                  color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
+                  border: `0.3px solid ${darkMode ? DARK.HEADER_BACKGROUND : LIGHT.HEADER_BACKGROUND}`,
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  height: "53px",
+                  lineHeight: "32px",
+                  padding: "4px 11px",
+                  transition: "all 0.5s",
+                  width: "28.5vw",
+                  minWidth: "200px",
+                }}
+                containerStyle={{
+                  width: "100%",
+                }}
+                darkMode={darkMode}
+                id="search-date-picker"
+                className={`rmdp-mobile bg-${mode} ${darkMode ? "default" : "default"}`}
+                range
+                name="date"
+                placeholder="날짜를 선택하세요."
+                format="YYYY-MM-DD"
+                plugins={[<DatePanel markFocused />]}
+                value={rangeDate.date}
+                onChange={(value: any) =>
+                  setRangeDate((prevFormData) => ({
+                    ...prevFormData,
+                    date: value,
+                  }))
+                }
+              />
+            </Grid>
+            <Grid item>
+              <Dropdown
+                darkMode={darkMode}
+                id="location-name-input"
+                value={locationName}
+                onChange={(e) => setLocationName(e.target.value)}
+              >
+                {mapList.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Dropdown>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{
+                  height: "53px",
+                  margin: "0",
+                  width: "28.5vw",
+                  minWidth: "200px",
+                  borderRadius: "10px",
+                  fontFamily: "OAGothic",
+                  // fontSize:
+                }}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleSearchButtonClick}
+              >
+                눌러서 검색하기
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+        <hr
+          style={{
+            width: "90%",
+            border: `0.5px solid ${darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW}`,
+            transition: "all 0.5s",
+            marginBottom: "-20px",
+          }}
+        />
         {events.length > 0 && (
           <Grid item className={classes.list}>
             <EventsList
               events={events}
-              locations={locations}
               onEventItemClick={handleEventItemClick}
+              darkMode={darkMode}
             />
           </Grid>
         )}

@@ -4,8 +4,6 @@
 // React & libraries
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import axios from "axios";
-import IEventData from "../interface/event.interface"
 import { FaMapMarkerAlt, FaClock, FaHourglassHalf } from "react-icons/fa";
 
 // Enum & Interface
@@ -23,19 +21,19 @@ import { getEvent } from "../network/api/axios.custom"
 // import { BuildingName } from "../component/building/buildingName"
 
 const eventData = {
-  "title": "안녕하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-  "typeId": 1,
-  "context": "마크다운이 들어갈 곳",
-  "locationCode": "PL0200",
-  "locationName": "운동장",
-  "dates": [
+  title: "안녕하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+  typeId: 1,
+  context: "마크다운이 들어갈 곳",
+  locationCode: "PL0200",
+  locationName: "운동장",
+  dates: [
     {
-      "startAt": "2023-03-16T09:00:00.000",
-      "term": 100
+      startAt: "2023-03-16T09:00:00.000",
+      term: 100
     },
     {
-      "startAt": "2023-03-17T09:00:00.000",
-      "term": 100
+      startAt: "2023-03-17T09:00:00.000",
+      term: 100
     }
   ]
 }
