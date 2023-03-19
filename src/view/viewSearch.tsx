@@ -8,14 +8,15 @@ import { ContainerContents } from "../container/contentSearch";
 export function Search(
   props: {
     darkMode: boolean,
+    toggleDarkMode: Function
     locations: Ilocation[]
   }
 ) {
-  const { darkMode, locations } = props;
+  const { darkMode, toggleDarkMode, locations } = props;
   return (
     <ViewTemplate
       darkMode={darkMode}
-      toggleDarkMode={() => {}}
+      toggleDarkMode={toggleDarkMode}
       content={(
         <ContainerContents
           darkMode={darkMode}

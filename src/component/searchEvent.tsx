@@ -176,63 +176,30 @@ export function SearchEvents(
 ) {
   // props variables
   const { darkMode, locations } = props;
+  const myLocations = [
+    { key: 0, value: "", name: "전체" },
+    ...locations
+      .sort((x, y) => x.sort - y.sort)
+      .map((x, i) => ({ key: i + 1, value: x.code, name: x.title })),
+  ];
 
   // mui variables - dates
+  const now = new Date();
+  const offset = now.getTimezoneOffset()
+  const today = (new Date(now.getTime() - (offset*60*1000))).toISOString().split("T")[0];
   const [rangeDate, setRangeDate] = useState({
-    date: [],
+    date: [today],
   })
 
   // mui variables - location
 
   // api variables
-  const [locationName, setLocationName] = useState("");
+  const [locationCode, setLocationCode] = useState(null);
   const [events, setEvents] = useState<Ievent[]>([]);
 
   // tmp
   const classes = useStyles(darkMode);
   const navigate = useNavigate();
-  const mapList: string[] = [
-    "장소를 선택하세요. (전체)",
-    "개포 클러스터",
-    "서초 클러스터",
-    "기타",
-    "개포 클러스터 - 2층 Cluster 01",
-    "개포 클러스터 - 2층 Cluster 02",
-    "개포 클러스터 - 4층 Cluster 03",
-    "개포 클러스터 - 4층 Cluster 04",
-    "개포 클러스터 - 5층 Cluster 05",
-    "개포 클러스터 - 5층 Cluster 06",
-    "서초 클러스터 - 4층 Cluster 07",
-    "서초 클러스터 - 4층 Cluster 08",
-    "서초 클러스터 - 5층 Cluster 09",
-    "서초 클러스터 - 5층 Cluster 10",
-    "개포 클러스터 - 3층 ClusterX 01",
-    "개포 클러스터 - 3층 ClusterX 02",
-    "개포 클러스터 - 1층 오픈클러스터",
-    "개포 클러스터 - 1층 게임장",
-    "개포 클러스터 - 1층 42Lab",
-  ];
-  const placeTypeMap: { [key: string] : PlaceType } = {
-    "장소를 선택하세요. (전체)": PlaceType.null,
-    "개포 클러스터": PlaceType.PL0000,
-    "서초 클러스터": PlaceType.PL0100,
-    "기타": PlaceType.PL0200,
-    "개포 클러스터 - 2층 Cluster 01": PlaceType.PL0001,
-    "개포 클러스터 - 2층 Cluster 02": PlaceType.PL0002,
-    "개포 클러스터 - 4층 Cluster 03": PlaceType.PL0003,
-    "개포 클러스터 - 4층 Cluster 04": PlaceType.PL0004,
-    "개포 클러스터 - 5층 Cluster 05": PlaceType.PL0005,
-    "개포 클러스터 - 5층 Cluster 06": PlaceType.PL0006,
-    "서초 클러스터 - 4층 Cluster 07": PlaceType.PL0007,
-    "서초 클러스터 - 4층 Cluster 08": PlaceType.PL0008,
-    "서초 클러스터 - 5층 Cluster 09": PlaceType.PL0009,
-    "서초 클러스터 - 5층 Cluster 10": PlaceType.PL0010,
-    "개포 클러스터 - 3층 ClusterX 01": PlaceType.PL0011,
-    "개포 클러스터 - 3층 ClusterX 02": PlaceType.PL0012,
-    "개포 클러스터 - 1층 오픈클러스터": PlaceType.PL0013,
-    "개포 클러스터 - 1층 게임장": PlaceType.PL0014,
-    "개포 클러스터 - 1층 42Lab": PlaceType.PL0015,
-  };
 
   let mode = "default";
   if (darkMode === true) {
@@ -243,11 +210,6 @@ export function SearchEvents(
 
   // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {
-    let locationCode: string = "0";
-    if (locationName !== "") {
-      const location = locations.find((loc) => loc.title === locationName);
-      locationCode = location?.code || "";
-    }
     const eventResponse = await searchEvent(rangeDate.date[0], rangeDate.date[1], locationCode);
     if (eventResponse) {
       setEvents(eventResponse);
@@ -256,7 +218,7 @@ export function SearchEvents(
 
   useEffect(() => {
     handleSearchButtonClick();
-  }, [rangeDate, locationName])
+  }, [rangeDate, locationCode])
 
   function handleEventItemClick(eventId: number) {
     navigate(`/event/${eventId}`)
@@ -324,34 +286,15 @@ export function SearchEvents(
               <Dropdown
                 darkMode={darkMode}
                 id="location-name-input"
-                value={locationName}
-                onChange={(e) => setLocationName(e.target.value)}
+                value={locationCode}
+                onChange={(e) => setLocationCode(e.target.value)}
               >
-                {mapList.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
+                {myLocations.map((x) => (
+                  <option key={x.key} value={x.value}>
+                    {x.name}
                   </option>
                 ))}
               </Dropdown>
-            </Grid>
-            <Grid item>
-              <Button
-                style={{
-                  height: "53px",
-                  margin: "0",
-                  width: "28.5vw",
-                  minWidth: "200px",
-                  borderRadius: "10px",
-                  fontFamily: "OAGothic",
-                  // fontSize:
-                }}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleSearchButtonClick}
-              >
-                눌러서 검색하기
-              </Button>
             </Grid>
           </Grid>
         </div>

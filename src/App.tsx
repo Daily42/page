@@ -124,7 +124,7 @@ function App() {
           <Route path="/" element={<Login darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/add" element={<Add darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/event/:eventId" element={<Event darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/search" element={<Search darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/search" element={<Search darkMode={darkMode} toggleDarkMode={toggleDarkMode} locations={locations} />} />
           <Route path="/*" element={<RootControl />} />
         </Routes>
       </BrowserRouter>

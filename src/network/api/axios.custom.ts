@@ -14,18 +14,21 @@ export const getEventsList = async () => {
 }
 
 export const searchEvent = async (
-  stt: string,
-  end: string,
-  loc: string
+  stt: string | null,
+  end: string | null,
+  loc: string | null
 ): Promise<Ievent[]> => {
   try {
+    console.log(">", stt, end, loc);
+    stt = stt ?? end;
+    end = end ?? stt;
+    console.log(">>", stt, end, loc);
     const querys = [
       stt ? `startDate=${stt}` : null,
       end ? `endDate=${end}` : null,
-      loc !== "0" && loc !== PlaceType.null ? `locationCode=${loc}` : null,
+      loc ? `locationCode=${loc}` : null,
     ].filter((x) => x != null);
     const url = `/events?${querys.join("&")}`;
-    console.log(`API:::: ${url}`);
     const response = await axios.instance.get<Ievent[]>(url);
     return response.data;
   } catch (error) {
