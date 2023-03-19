@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable import/no-unresolved */
 // React & libraries
@@ -16,6 +17,7 @@ import { DARK, LIGHT } from "../theme/theme";
 // pre-made
 
 // API
+import { getEvent } from "../network/api/axios.custom"
 
 // import { BuildingName } from "../component/building/buildingName"
 
@@ -43,18 +45,6 @@ const Contents = styled.div<Props>`
   }
 `;
 
-const getEventContext = async (eventId: string) => {
-  try {
-    const response = await axios.get<IEventData>(
-      `http://daily42-env.eba-dmbiy4zs.ap-northeast-2.elasticbeanstalk.com/events/${eventId}`
-    );
-    return response.data.context;
-  } catch (error) {
-    console.error(error);
-    return "";
-  }
-};
-
 export function ContainerContents(
   props: {
     darkMode: boolean,
@@ -67,11 +57,11 @@ export function ContainerContents(
   const [context, setContext] = useState("");
   useEffect(() => {
     const fetchContext = async () => {
-      const context = await getEventContext(props.eventId);
+      const context = await getEvent(eventId);
       setContext(context);
     };
     fetchContext();
-  }, [props.eventId]);
+  }, [eventId]);
 
   return (
     <Contents className="contents" darkMode={darkMode}>
