@@ -3,6 +3,8 @@
 // React & libraries
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
+import axios from "axios";
+import IEventData from "../interface/event.interface"
 
 // Enum & Interface
 import ReactMarkdown from "react-markdown";
@@ -41,6 +43,18 @@ const Contents = styled.div<Props>`
   }
 `;
 
+const getEventContext = async (eventId: string) => {
+  try {
+    const response = await axios.get<IEventData>(
+      `http://daily42-env.eba-dmbiy4zs.ap-northeast-2.elasticbeanstalk.com/events/${eventId}`
+    );
+    return response.data.context;
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+};
+
 export function ContainerContents(
   props: {
     darkMode: boolean,
@@ -50,13 +64,19 @@ export function ContainerContents(
 ) {
   const { darkMode, toggleDarkMode, eventId } = props;
 
+  const [context, setContext] = useState("");
+  useEffect(() => {
+    const fetchContext = async () => {
+      const context = await getEventContext(props.eventId);
+      setContext(context);
+    };
+    fetchContext();
+  }, [props.eventId]);
+
   return (
     <Contents className="contents" darkMode={darkMode}>
-      put your content here
       <ReactMarkdown>
-{`# This is a heading
-
-This is some **bold** text.`}
+        {context}
       </ReactMarkdown>
     </Contents>
   );
