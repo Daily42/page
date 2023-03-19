@@ -331,14 +331,14 @@ function WritePost(
           value={selectDate.term}
           onChange={handleInputChangeTerm}
         />
-        <Dropdown value={selectedOption} onChange={handleOptionChangeEvent}>
+        <Dropdown value={selectedOption?.id} onChange={handleOptionChangeEvent}>
           {types.map((type: Itype) => (
             <option key={type.id} value={type.id}>
               {type.title}
             </option>
           ))}
         </Dropdown>
-        <Dropdown value={selectedOption2} onChange={handleOption2Change}>
+        <Dropdown value={selectedOption2?.code} onChange={handleOption2Change}>
           {locations.map((location: Ilocation) => (
             <option key={location.code} value={location.code}>
               {location.title}
