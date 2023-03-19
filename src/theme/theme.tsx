@@ -4,7 +4,7 @@ export const LIGHT = {
   HEADER_BACKGROUND: "#dedbdb",
   BACKGROUND: "#F3F3F3",
   TEXT: "#040404",
-  SHADOW: "rgba(233,233,233,0.4)",
+  SHADOW: "rgba(200,200,200,0.4)",
   TEXT_SHADOW: "rgba(40,40,40,0.4)",
   COLOR_SHADOW: "rgba(0,255,219,0.4)",
   FORM: "#FFFFFF",

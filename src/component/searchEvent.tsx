@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 
 // MUI
 import { Button, Container, Grid, List, ListItem, ListItemText, makeStyles } from "@material-ui/core";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 // Calendar picker
 import DatePicker from "react-multi-date-picker";
@@ -112,6 +113,12 @@ const EventName = styled.div`
   font-size: 1.3rem;
 `;
 
+const Icon = styled.div`
+  font-size: 24px;
+  margin-right: 10px;
+  color: #aaa;
+`;
+
 function getBuildingTitle(locationCode: string, locationList: Ilocation[]) {
   const location = locationList.find((loc) => loc.code === locationCode) || { title: "" };
   return location.title;
@@ -148,9 +155,10 @@ function EventsList(
               {event.title}
             </EventName>
             <div>
+              <FaMapMarkerAlt style={{opacity: 0.5}} />&nbsp;
               {event.location.parent?.title}
               {event.location.parent?.title ? " > " : ""}
-              <b>{event.location.title}</b>
+              {event.location.title}
               {event.location.code === PlaceType.PL0200 ? ` : ${event.locationName}` : ""}
             </div>
           </ListItemText>

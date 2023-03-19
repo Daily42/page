@@ -18,6 +18,7 @@ enum PlaceType {
   PL0013 = "PL0013", // 개포 클러스터 - 1층 오픈클러스터
   PL0014 = "PL0014", // 개포 클러스터 - 1층 게임장
   PL0015 = "PL0015", // 개포 클러스터 - 1층 42Lab
+  PL0016 = "PL0016", // 개포 클러스터 - 지하1층 Assembly
 }
 
 export default PlaceType;
