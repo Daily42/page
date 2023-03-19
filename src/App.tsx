@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Global, css } from "@emotion/react";
 import { Login } from "./view/viewLogin";
@@ -8,19 +8,26 @@ import { Root } from "./view/viewRoot";
 import { DARK, LIGHT } from "./theme/theme";
 import { RootControl } from "./component/rootControl"
 import Ilocation from "./interface/location.interface";
+import { getLocations } from "./network/api/axios.custom";
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [locations, setLocations] = useState<Ilocation[]>([]);
+  const locationRef = useRef(false);
 
   const toggleDarkMode = () => {
-    console.log("TOGGLE BUTTON HI");
     setDarkMode(!darkMode);
   };
 
-  // const locationLoad = async () => {
-  //   const response = await getLocations()
-  // }
+  const locationLoad = async () => {
+    const response = await getLocations();
+    if (response && locationRef.current === false) {
+      setLocations(response);
+      locationRef.current = true;
+    }
+  }
+
+  locationLoad();
 
   return (
     <>
@@ -114,10 +121,10 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/" element={<Login darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/add" element={<Add darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/event/:eventId" element={<Event darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/" element={<Root darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/search" element={<Root darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/*" element={<RootControl />} />
         </Routes>
       </BrowserRouter>

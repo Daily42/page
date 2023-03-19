@@ -165,6 +165,41 @@ const LoginButton = styled.a<Props>`
   }
 `;
 
+const LoginButton2 = styled.div<Props>`
+  opacity: 0.75;
+
+  font-family: OAGothic;
+  font-weight: 500;
+
+  padding: 10px;
+  padding-left: 13px;
+  padding-right: 13px;
+  background: ${(props) => (props.darkMode ? LIGHT.BACKGROUND : DARK.BACKGROUND)};
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: ${(props) => (props.darkMode ? LIGHT.TEXT : DARK.TEXT)};
+  text-decoration: none;
+  transition: all 0.5s;
+
+  &:hover {
+    opacity: 0.9;
+    font-size: 1.05rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    padding-left: 11px;
+    padding-right: 11px;
+    font-size: 0.8rem;
+
+    &:hover {
+      opacity: 0.9;
+      font-size: 0.87rem;
+    }
+  }
+`;
+
 export function ContainerContents(
   props: {
     darkMode: boolean,
@@ -172,6 +207,10 @@ export function ContainerContents(
   }
 ) {
   const { darkMode, toggleDarkMode } = props;
+  const naviate = useNavigate();
+  const navigateTo = (str: string) => {
+    naviate(str);
+  }
 
   return (
     <Contents className="contents" darkMode={darkMode}>
@@ -187,12 +226,18 @@ export function ContainerContents(
           </LogoText>
         </LogoContainer>
         <div style={{ width: "100%", height: "10%" }} />
-        <LoginButton
+        {/* <LoginButton
           darkMode={darkMode}
           href={`${backendSite}/auth/42?redirectUrl=http://localhost:3030`}
         >
           Login with 42 account
-        </LoginButton>
+        </LoginButton> */}
+        <LoginButton2
+          darkMode={darkMode}
+          onClick={() => { navigateTo("/search")} }
+        >
+          Click me to Search
+        </LoginButton2>
       </Wrapper>
     </Contents>
   );
