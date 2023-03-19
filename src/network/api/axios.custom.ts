@@ -69,7 +69,7 @@ export const getChildLocations = async (locId: PlaceType) => {
 export const getEvent = async (eventId: string) => {
   try {
     const response = await axios.instance.get<Ievent>(`/events/${eventId}`);
-    return response.data.context;
+    return response.data;
   } catch (error) {
     console.error(error);
     return "";
