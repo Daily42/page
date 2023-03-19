@@ -5,6 +5,7 @@ import Ilocation from "../../interface/location.interface";
 import DateType from "../../enum/eventType.enum";
 import PlaceType from "../../enum/placeType.enum";
 import Ipost from "../../interface/post.interface";
+import { placeTypeToString } from "../../component/util/placeTypeToString";
 
 export const getEventsList = async () => {
   try {
@@ -88,9 +89,18 @@ export const getEvent = async (eventId: string) => {
 
 export const writePost = async (data: Ipost) => {
   try {
-    const response = await axios.instance.post<Ipost>("/events", data);
+    console.log(data);
+    const rst: any = {
+      title: data.title,
+      typeId: data.typeId,
+      context: data.context,
+      locationCode: data.locationCode?.code.toString(),
+      locationName: data.locationName,
+      dates: data.dates
+    }
+    const response = await axios.instance.post<Ipost>("/events", rst);
     console.log(response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error(error);
     return "";

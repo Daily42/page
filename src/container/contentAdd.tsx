@@ -5,6 +5,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable max-len */
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import DatePicker from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
@@ -140,6 +141,10 @@ function WritePost(
   }
 ) {
   const { darkMode, locations, types } = props;
+  const navigate = useNavigate();
+  function navigateTo(id: string) {
+    navigate("/search");
+  }
   const initialFormData: Ipost = {
     title: "",
     typeId: "1",
@@ -214,7 +219,7 @@ function WritePost(
     }
     setFormData((prevFormData: any) => ({
       ...prevFormData,
-      locationCode: selectedLocation,
+      locationCode: selectedLocation.code,
     }));
   };
 
@@ -248,8 +253,10 @@ function WritePost(
         };
       });
     }
-    console.log(formData);
-    const response = writePost(formData);
+    writePost(formData).then((response) => {
+      alert("글 작성에 성공했습니다.");
+      navigateTo("0");
+    });
   };
 
   return (

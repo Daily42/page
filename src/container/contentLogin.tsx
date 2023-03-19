@@ -165,7 +165,16 @@ const LoginButton = styled.a<Props>`
   }
 `;
 
-const LoginButton2 = styled.div<Props>`
+const ButtonContainer = styled.div<Props>`
+  display: flex;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const Button = styled.div<Props>`
   opacity: 0.75;
 
   font-family: OAGothic;
@@ -200,6 +209,8 @@ const LoginButton2 = styled.div<Props>`
   }
 `;
 
+const Button2 = Button;
+
 export function ContainerContents(
   props: {
     darkMode: boolean,
@@ -226,18 +237,29 @@ export function ContainerContents(
           </LogoText>
         </LogoContainer>
         <div style={{ width: "100%", height: "10%" }} />
-        {/* <LoginButton
-          darkMode={darkMode}
-          href={`${backendSite}/auth/42?redirectUrl=http://localhost:3030`}
-        >
-          Login with 42 account
-        </LoginButton> */}
-        <LoginButton2
-          darkMode={darkMode}
-          onClick={() => { navigateTo("/search") }}
-        >
-          Click me to Search
-        </LoginButton2>
+        <ButtonContainer>
+          <LoginButton
+            darkMode={darkMode}
+            href={`${backendSite}/auth/42?redirectUrl=http://localhost:3030`}
+          >
+            Login with 42 account
+          </LoginButton>
+          <br />
+          <br />
+          <Button
+            darkMode={darkMode}
+            onClick={() => { navigateTo("/search") }}
+          >
+            Click me to Search
+          </Button>
+          <br />
+          <Button2
+            darkMode={darkMode}
+            onClick={() => { navigateTo("/add") }}
+          >
+            Click me to Add a post
+          </Button2>
+        </ButtonContainer>
       </Wrapper>
     </Contents>
   );

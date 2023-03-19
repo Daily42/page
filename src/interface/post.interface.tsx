@@ -5,7 +5,7 @@ export default interface Ipost {
   title?: string,
   typeId?: string,
   context?: string,
-  locationCode?: PlaceType,
+  locationCode?: any,
   locationName?: string,
   dates?: Idate[],
 }
