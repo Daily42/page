@@ -1,28 +1,29 @@
 import React from "react";
 import { styled } from "@stitches/react";
 import { ViewTemplate } from "./viewTemplate";
+import Ilocation from "../interface/location.interface";
 
-import { ContainerContents } from "../container/contentRoot";
+import { ContainerContents } from "../container/contentSearch";
 
-export function Root(
+export function Search(
   props: {
     darkMode: boolean,
-    toggleDarkMode: Function
+    locations: Ilocation[]
   }
 ) {
-  const { darkMode, toggleDarkMode } = props;
+  const { darkMode, locations } = props;
   return (
     <ViewTemplate
       darkMode={darkMode}
-      toggleDarkMode={toggleDarkMode}
+      toggleDarkMode={() => {}}
       content={(
         <ContainerContents
           darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
+          locations={locations}
         />
       )}
     />
   );
 }
 
-export default Root;
+export default Search;

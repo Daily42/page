@@ -39,15 +39,16 @@ const Contents = styled.div<Props>`
 export function ContainerContents(
   props: {
     darkMode: boolean,
-    toggleDarkMode: Function
+    locations: Ilocation[]
   }
 ) {
-  const { darkMode, toggleDarkMode } = props;
+  const { darkMode, locations } = props;
 
   return (
     <Contents className="contents" darkMode={darkMode}>
       <SearchEvents
         darkMode={darkMode}
+        locations={locations}
       />
     </Contents>
   );

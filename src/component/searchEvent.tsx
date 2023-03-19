@@ -171,10 +171,11 @@ function EventsList(
 export function SearchEvents(
   props: {
     darkMode: boolean,
+    locations: Ilocation[]
   }
 ) {
   // props variables
-  const { darkMode } = props;
+  const { darkMode, locations } = props;
 
   // mui variables - dates
   const [rangeDate, setRangeDate] = useState({
@@ -186,7 +187,6 @@ export function SearchEvents(
   // api variables
   const [locationName, setLocationName] = useState("");
   const [events, setEvents] = useState<Ievent[]>([]);
-  const [locations, setLocations] = useState<Ilocation[]>([]);
 
   // tmp
   const classes = useStyles(darkMode);
@@ -240,12 +240,6 @@ export function SearchEvents(
   } else {
     mode = "default";
   }
-
-  useEffect(() => {
-    getLocations().then((response: any) => {
-      setLocations(response);
-    });
-  }, []);
 
   // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {

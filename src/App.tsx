@@ -4,7 +4,7 @@ import { Global, css } from "@emotion/react";
 import { Login } from "./view/viewLogin";
 import { Add } from "./view/viewAdd";
 import { Event } from "./view/viewEvent";
-import { Root } from "./view/viewRoot";
+import { Search } from "./view/viewSearch";
 import { DARK, LIGHT } from "./theme/theme";
 import { RootControl } from "./component/rootControl"
 import Ilocation from "./interface/location.interface";
@@ -124,7 +124,7 @@ function App() {
           <Route path="/" element={<Login darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/add" element={<Add darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/event/:eventId" element={<Event darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/search" element={<Root darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/search" element={<Search darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/*" element={<RootControl />} />
         </Routes>
       </BrowserRouter>

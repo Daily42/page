@@ -234,7 +234,7 @@ export function ContainerContents(
         </LoginButton> */}
         <LoginButton2
           darkMode={darkMode}
-          onClick={() => { navigateTo("/search")} }
+          onClick={() => { navigateTo("/search") }}
         >
           Click me to Search
         </LoginButton2>
