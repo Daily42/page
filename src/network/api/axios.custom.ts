@@ -13,19 +13,20 @@ export const getEventsList = async () => {
   }
 }
 
-export const searchEvent = async (stt: string, end: string, loc: string): Promise<Ievent[]> => {
+export const searchEvent = async (
+  stt: string,
+  end: string,
+  loc: string
+): Promise<Ievent[]> => {
   try {
-    const date = `startDate=${stt}&endDate=${end}`;
-    let loca;
-    if (loc === "0" || loc === PlaceType.null) {
-      loca = "";
-    } else {
-      loca = `&locationCode=${loc}`;
-    }
-    console.log(`API:::: /events?${date}${loca}`)
-    const response = await axios.instance.get<Ievent[]>(
-      `/events?${date}${loca}`
-    );
+    const querys = [
+      stt ? `startDate=${stt}` : null,
+      end ? `endDate=${end}` : null,
+      loc !== "0" && loc !== PlaceType.null ? `locationCode=${loc}` : null,
+    ].filter((x) => x != null);
+    const url = `/events?${querys.join("&")}`;
+    console.log(`API:::: ${url}`);
+    const response = await axios.instance.get<Ievent[]>(url);
     return response.data;
   } catch (error) {
     console.error(error);

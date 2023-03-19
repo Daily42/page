@@ -260,6 +260,10 @@ export function SearchEvents(
     }
   };
 
+  useEffect(() => {
+    handleSearchButtonClick();
+  }, [rangeDate, locationName])
+
   function handleEventItemClick(eventId: number) {
     navigate(`/event/${eventId}`)
   }
