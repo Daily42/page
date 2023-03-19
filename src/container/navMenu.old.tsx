@@ -72,44 +72,12 @@ const Title = styled.div<Props>`
   }
 `;
 
-const DarkModeButtonContainer = styled.button`
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.5s;
-  background: linear-gradient(145deg, #23282c, #1e2125);
-  cursor: pointer;
+const DarkModeButton = styled.button`
   border: none;
-  outline: none;
-  padding: 0;
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const DarkModeButton = styled.div<Props>`
-  background-color: var(--bs-dark);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: transparent;
+  color: inherit;
   cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  & > img {
-    width: 20px;
-    height: 20px;
-    transition: 0.5s;
-  }
+  margin-right: 10px;
 `;
 
 export function ContainerNavMenu(
@@ -124,17 +92,6 @@ export function ContainerNavMenu(
 
   function navigateTo(str: string) {
     navigate(str);
-  }
-
-  function toggleTheme() {
-    toggleDarkMode();
-    const themeIcon = document.getElementById("theme-icon");
-    if (themeIcon) {
-      themeIcon.classList.add("change");
-      setTimeout(() => {
-        themeIcon.classList.remove("change");
-      }, 1000);
-    }
   }
 
   return (
@@ -160,10 +117,9 @@ export function ContainerNavMenu(
         </Button>
         <Title onClick={() => { navigateTo("/") }} darkMode={darkMode}>{title}</Title>
       </ButtonContainer>
-      <DarkModeButton darkMode={darkMode} onClick={() => { toggleTheme() }}>
-        <div className="theme-container shadow-dark">
-          <img id="theme-icon" src={darkMode ? "https://www.uplooder.net/img/image/2/addf703a24a12d030968858e0879b11e/moon.svg" : "https://www.uplooder.net/img/image/55/7aa9993fc291bc170abea048589896cf/sun.svg"} alt="Theme Icon" />
-        </div>
+      {/* <div onClick={() => { navigateTo("/add") }}>ADD</div> */}
+      <DarkModeButton onClick={() => { toggleDarkMode() }}>
+        {darkMode ? "Turn off" : "Turn on"} Dark Mode
       </DarkModeButton>
     </Container>
   );

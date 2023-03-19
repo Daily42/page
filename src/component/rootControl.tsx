@@ -8,7 +8,7 @@ export function RootControl() {
   const auth = useSelector<ReducerType, AuthData>((state) => state.auth);
 
   if (!auth.auth || (auth.isRequire2f && !auth.auth2f)) {
-    return (<Navigate replace to="/Login" />);
+    return (<Navigate replace to="/" />);
   }
 
   return (

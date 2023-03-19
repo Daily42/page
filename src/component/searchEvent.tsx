@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable quote-props */
 /* eslint-disable react/jsx-no-bind */
 // React
@@ -9,7 +10,7 @@ import styled from "@emotion/styled";
 
 // MUI
 import { Button, Container, Grid, List, ListItem, ListItemText, makeStyles } from "@material-ui/core";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock, FaHourglassHalf } from "react-icons/fa";
 
 // Calendar picker
 import DatePicker from "react-multi-date-picker";
@@ -154,12 +155,18 @@ function EventsList(
             <EventName>
               {event.title}
             </EventName>
+            <div style={{ margin: "1px" }}>
+              <FaMapMarkerAlt style={{ fontSize: "16px", opacity: 0.5, margin: 0 }} />&nbsp;
+              <>
+                {event.location.parent?.title}
+                {event.location.parent?.title ? " > " : ""}
+                {event.location.title}
+                {event.location.code === PlaceType.PL0200 ? ` : ${event.locationName}` : ""}
+              </>
+            </div>
             <div>
-              <FaMapMarkerAlt style={{opacity: 0.5}} />&nbsp;
-              {event.location.parent?.title}
-              {event.location.parent?.title ? " > " : ""}
-              {event.location.title}
-              {event.location.code === PlaceType.PL0200 ? ` : ${event.locationName}` : ""}
+              <FaHourglassHalf style={{ fontSize: "16px", opacity: 0.5, margin: 0 }} />&nbsp;
+              for {event.dates[0]?.term} minutes
             </div>
           </ListItemText>
         </ListItem>
