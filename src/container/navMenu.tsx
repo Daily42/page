@@ -18,7 +18,7 @@ const Container = styled.div<Props>`
   padding: 0 10px;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
   text-shadow: 0.5px 0.5px 2px ${(props) => (props.darkMode ? DARK.SHADOW : LIGHT.SHADOW)};
-  transition-duration: 0s;
+  transition-duration: 0.5s;
 `;
 
 interface ButtonProps {
@@ -44,7 +44,6 @@ const Button = styled.button<ButtonProps>`
   align-items: center;
   border-radius: 50%;
   padding: 0;
-  box-shadow: 0 1px 4px ${(props) => props.color};
 
   &:hover {
     & > img {
@@ -61,13 +60,15 @@ const ImgIcon = styled.img`
 `;
 
 const Title = styled.div<Props>`
+  font-family: OAGothic;
+  font-weight: 500;
   margin-left: 20px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  text-shadow: 0.2px 0.2px 4px ${(props) => (props.darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW)};
+  transition-duration: 0.5s;
   &:hover {
-    #font-weight: 500;
-    text-shadow: 1px 1px 1px ${(props) => (props.darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW)};
+    font-weight: 500;
+    text-shadow: 0.5px 0.5px 20px ${(props) => (props.darkMode ? DARK.TEXT_SHADOW : LIGHT.TEXT_SHADOW)};
   }
 `;
 

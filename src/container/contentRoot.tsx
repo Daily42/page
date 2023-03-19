@@ -19,8 +19,6 @@ import { getLocations } from "../network/api/axios.custom"
 // import { BuildingName } from "../component/building/buildingName"
 
 const Contents = styled.div<Props>`
-  height: calc(100% - 50px);
-  display: flex;
   flex-direction: column;
   justify-content: left;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};

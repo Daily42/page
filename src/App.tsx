@@ -9,7 +9,7 @@ import { DARK, LIGHT } from "./theme/theme";
 import { RootControl } from "./component/rootControl"
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const toggleDarkMode = () => {
     console.log("TOGGLE BUTTON HI");
@@ -23,6 +23,16 @@ function App() {
           body {
             background-color: ${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND};
             transition-duration: 0.3s;
+            @font-face {
+              font-family: 'OAGothic';
+              src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+              font-weight: 800;
+            }
+            @font-face {
+              font-family: 'OAGothic';
+              src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-Medium.woff2') format('woff2');
+              font-weight: 500;
+            }
           }
           .view {
             background-color: ${darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND} !important;

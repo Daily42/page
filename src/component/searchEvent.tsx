@@ -36,12 +36,24 @@ const DatePickerInput = styled(DatePicker)<Props>`
 
 const Dropdown = styled.select<Props>`
   background-color: ${(props) => (props.darkMode ? DARK.FORM : LIGHT.FORM)};
-  border: none;
+  border: 0.3px solid ${(props) => (props.darkMode ? DARK.HEADER_BACKGROUND : LIGHT.HEADER_BACKGROUND)};
+  box-shadow: 2px 2px 5px ${(props) => (props.darkMode ? DARK.SHADOW : LIGHT.SHADOW)};
   border-radius: 8px;
-  color: #333;
   padding: 16px;
   font-size: 16px;
+  color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
+
+  &::placeholder {
+    color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
+  }
 `;
+
+// style={{
+//   backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
+//   color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
+//   margin: "1rem",
+//   width: "185px",
+// }}
 
 const useStyles = makeStyles({
   root: {
@@ -169,13 +181,15 @@ export function SearchEvents(
   }
 
   useEffect(() => {
+    console.log("CALLED!")
     getLocations().then((response: any) => {
       setLocations(response);
     });
-  }, [locations]);
+  }, []);
 
   // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {
+    console.log("CLICKED!");
     let locationCode: string = "0";
     if (locationName !== "") {
       const location = locations.find((loc) => loc.title === locationName);
@@ -206,7 +220,7 @@ export function SearchEvents(
               backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
               boxSizing: "border-box",
               color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
-              border: "none",
+              border: `0.3px solid ${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
               fontSize: "14px",
               height: "32px",
               lineHeight: "32px",
@@ -233,12 +247,7 @@ export function SearchEvents(
             }
           />
           <Dropdown
-            style={{
-              backgroundColor: `${darkMode ? DARK.FORM : LIGHT.FORM}`,
-              color: `${darkMode ? DARK.TEXT : LIGHT.TEXT}`,
-              margin: "1rem",
-              width: "185px",
-            }}
+            darkMode={darkMode}
             id="location-name-input"
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
