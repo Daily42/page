@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 
 // Enum & Interface
 import Ilocation from "../interface/location.interface";
+import Itype from "../interface/type.interface";
 import Props from "../interface/props.interface";
 
 // theme
@@ -39,16 +40,18 @@ const Contents = styled.div<Props>`
 export function ContainerContents(
   props: {
     darkMode: boolean,
-    locations: Ilocation[]
+    locations: Ilocation[],
+    types: Itype[],
   }
 ) {
-  const { darkMode, locations } = props;
+  const { darkMode, locations, types } = props;
 
   return (
     <Contents className="contents" darkMode={darkMode}>
       <SearchEvents
         darkMode={darkMode}
         locations={locations}
+        types={types}
       />
     </Contents>
   );

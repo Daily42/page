@@ -1,16 +1,20 @@
 import React from "react";
 import { styled } from "@stitches/react";
 import { ViewTemplate } from "./viewTemplate";
+import Ilocation from "../interface/location.interface";
+import Itype from "../interface/type.interface";
 
 import { ContainerContents } from "../container/contentAdd";
 
 export function Add(
   props: {
     darkMode: boolean,
-    toggleDarkMode: Function
+    toggleDarkMode: Function,
+    locations: Ilocation[],
+    types: Itype[]
   }
 ) {
-  const { darkMode, toggleDarkMode } = props;
+  const { darkMode, toggleDarkMode, locations, types } = props;
   return (
     <ViewTemplate
       darkMode={darkMode}
@@ -18,7 +22,8 @@ export function Add(
       content={(
         <ContainerContents
           darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
+          locations={locations}
+          types={types}
         />
       )}
     />

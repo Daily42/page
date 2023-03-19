@@ -150,7 +150,7 @@ function EventsList(
   // getEventType
   return (
     <List>
-      {events.map((event) => (
+      {events.map((event: Ievent) => (
         <ListItem
           button
           key={event.id}
@@ -177,7 +177,7 @@ function EventsList(
             </div>
             <div>
               <FaHourglassHalf style={{ fontSize: "16px", opacity: 0.5, margin: 0 }} />&nbsp;
-              {toTimeString(event.dates[0]?.term)}
+              {toTimeString(event?.dates[0]?.term)}
             </div>
           </ListItemText>
         </ListItem>
@@ -189,11 +189,12 @@ function EventsList(
 export function SearchEvents(
   props: {
     darkMode: boolean,
-    locations: Ilocation[]
+    locations: Ilocation[],
+    types: Itype[]
   }
 ) {
   // props variables
-  const { darkMode, locations } = props;
+  const { darkMode, locations, types } = props;
   const myLocations = [
     { key: 0, value: "", name: "전체" },
     ...locations
@@ -204,7 +205,7 @@ export function SearchEvents(
   // mui variables - dates
   const now = new Date();
   const offset = now.getTimezoneOffset()
-  const today = (new Date(now.getTime() - (offset*60*1000))).toISOString().split("T")[0];
+  const today = (new Date(now.getTime() - (offset * 60 * 1000))).toISOString().split("T")[0];
   const [rangeDate, setRangeDate] = useState({
     date: [today],
   })
@@ -305,7 +306,7 @@ export function SearchEvents(
                 darkMode={darkMode}
                 id="location-name-input"
                 value={locationCode}
-                onChange={(e) => setLocationCode(e.target.value)}
+                onChange={(e: any) => setLocationCode(e.target.value)}
               >
                 {myLocations.map((x) => (
                   <option key={x.key} value={x.value}>

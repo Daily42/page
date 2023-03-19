@@ -16,17 +16,17 @@ import placeType from "../enum/placeType.enum";
 import Idate, { IDateObject } from "../interface/date.interface";
 import Ipost from "../interface/post.interface";
 import PlaceType from "../enum/placeType.enum";
+import Ilocation from "../interface/location.interface";
+import Itype from "../interface/type.interface";
+import { writePost } from "../network/api/axios.custom";
 
 const Contents = styled.div<Props>`
+  width: 100vw;
   height: calc(100% - 50px);
-  width: 70%;
-  margin-left: 15%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: left;
   color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
-  background-color: ${(props) => (props.darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND)};
   overflow-x: hidden;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -41,21 +41,12 @@ const Contents = styled.div<Props>`
 `;
 
 const Container = styled.div<Props>`
+  width: 80vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => (props.darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND)};
   height: 100vh;
-`;
-
-const Card = styled.div<Props>`
-  background-color: ${(props) => (props.darkMode ? DARK.BACKGROUND : LIGHT.BACKGROUND)};
-  border-radius: 8px;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
-  padding: 32px;
-  width: 100%;
 `;
 
 const Form = styled.form`
@@ -65,10 +56,10 @@ const Form = styled.form`
 `;
 
 const Input = styled.input<Props>`
-  background-color: ${(props) => (props.darkMode ? LIGHT.FORM : LIGHT.FORM)};
+  background-color: white;
   border: none;
-  border-radius: 8px;
-  color: ${(props) => (props.darkMode ? DARK.TEXT : LIGHT.TEXT)};
+  border-radius: 3px;
+  color: black;
   padding: 16px;
   font-size: 16px;
 `;
@@ -76,7 +67,7 @@ const Input = styled.input<Props>`
 const TextArea = styled.textarea<Props>`
   background-color: ${(props) => (props.darkMode ? DARK.FORM : LIGHT.FORM)};
   border: none;
-  border-radius: 8px;
+  border-radius: 3px;
   color: #333;
   min-height: 200px;
   padding: 16px;
@@ -116,9 +107,8 @@ const Heading = styled.h1<Props>`
 `;
 
 const Dropdown = styled.select<Props>`
-  background-color: ${(props) => (props.darkMode ? DARK.FORM : LIGHT.FORM)};
   border: none;
-  border-radius: 8px;
+  border-radius: 3px;
   color: #333;
   padding: 16px;
   font-size: 16px;
@@ -145,17 +135,26 @@ const CheckboxText = styled.span`
 function WritePost(
   props: {
     darkMode: boolean,
+    locations: Ilocation[]
+    types: Itype[]
   }
 ) {
-  const { darkMode } = props;
+  const { darkMode, locations, types } = props;
   const initialFormData: Ipost = {
     title: "",
     typeId: "1",
     context: "",
-    locationCode: PlaceType.PL0000,
+    locationCode: placeType.PL0000,
     locationName: "",
     dates: [],
   };
+
+  let mode = "default";
+  if (darkMode === true) {
+    mode = "dark";
+  } else {
+    mode = "default";
+  }
 
   const [formData, setFormData] = useState<Ipost>(initialFormData);
 
@@ -167,91 +166,9 @@ function WritePost(
     term: "",
   });
   const [isRange, setIsRange] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("42seoul_official");
-  const [selectedOption2, setSelectedOption2] = useState("개포 클러스터");
+  const [selectedOption, setSelectedOption] = useState<Itype>(types[0]);
+  const [selectedOption2, setSelectedOption2] = useState<Ilocation>(locations[0]);
   const [showLocationInputgaepo, setshowLocationInputgaepo] = useState(true);
-
-  // useEffect(() => {
-  //   if (selectDate.date.length > 0) {
-  //     if (isRange) {
-  //       const start = selectDate.date[0];
-  //       const end = selectDate.date[1];
-  //       let currentDate = new Date(start.year, start.month - 1, start.day + 1, start.hour, start.minute);
-  //       const endDate = new Date(end.year, end.month - 1, end.day + 1, end.hour, end.minute);
-  //       while (currentDate <= endDate) {
-  //         console.log(currentDate.toISOString());
-  //         currentDate = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24);
-  //       }
-  //     } else {
-  //       selectDate.date.map(date => {
-  //         const { year, month, day, hour, minute } = date;
-  //         const isoDate = new Date(year, month - 1, day + 1, hour, minute).toISOString();
-  //         console.log(isoDate);
-  //       });
-  //     }
-  //   } else {
-  //     console.log("No date selected");
-  //   }
-  //   console.log(selectDate);
-  // }, [selectDate.date, isRange]);
-
-  const options = [
-    "42seoul_official",
-    "study group",
-    "club(동아리)",
-    "hackerthon & conference",
-    "etc"
-  ];
-
-  const eventTypeMap: { [key: string]: string } = {
-    "42seoul_official": "1",
-    "study group": "2",
-    "club(동아리)": "3",
-    "hackerthon & conference": "4",
-    "etc": "5",
-  };
-
-  const options2 = [
-    "개포 클러스터",
-    "서초 클러스터",
-    "기타",
-    "개포 클러스터 - 2층 Cluster 01",
-    "개포 클러스터 - 2층 Cluster 02",
-    "개포 클러스터 - 4층 Cluster 03",
-    "개포 클러스터 - 4층 Cluster 04",
-    "개포 클러스터 - 5층 Cluster 05",
-    "개포 클러스터 - 5층 Cluster 06",
-    "서초 클러스터 - 4층 Cluster 07",
-    "서초 클러스터 - 4층 Cluster 08",
-    "서초 클러스터 - 5층 Cluster 09",
-    "서초 클러스터 - 5층 Cluster 10",
-    "개포 클러스터 - 3층 ClusterX 01",
-    "개포 클러스터 - 3층 ClusterX 02",
-    "개포 클러스터 - 1층 오픈클러스터",
-    "개포 클러스터 - 1층 게임장",
-    "개포 클러스터 - 1층 42Lab",
-  ];
-
-  const placeTypeMap: { [key: string] : PlaceType } = {
-    "개포 클러스터": placeType.PL0000,
-    "서초 클러스터": placeType.PL0100,
-    "기타 etc": placeType.PL0200,
-    "개포 클러스터 - 2층 Cluster 01": placeType.PL0001,
-    "개포 클러스터 - 2층 Cluster 02": placeType.PL0002,
-    "개포 클러스터 - 4층 Cluster 03": placeType.PL0003,
-    "개포 클러스터 - 4층 Cluster 04": placeType.PL0004,
-    "개포 클러스터 - 5층 Cluster 05": placeType.PL0005,
-    "개포 클러스터 - 5층 Cluster 06": placeType.PL0006,
-    "서초 클러스터 - 4층 Cluster 07": placeType.PL0007,
-    "서초 클러스터 - 4층 Cluster 08": placeType.PL0008,
-    "서초 클러스터 - 5층 Cluster 09": placeType.PL0009,
-    "서초 클러스터 - 5층 Cluster 10": placeType.PL0010,
-    "개포 클러스터 - 3층 ClusterX 01": placeType.PL0011,
-    "개포 클러스터 - 3층 ClusterX 02": placeType.PL0012,
-    "개포 클러스터 - 1층 오픈클러스터": placeType.PL0013,
-    "개포 클러스터 - 1층 게임장": placeType.PL0014,
-    "개포 클러스터 - 1층 42Lab": placeType.PL0015,
-  };
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
@@ -262,11 +179,11 @@ function WritePost(
   };
 
   const handleOptionChangeEvent = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
+    const selectedValue: Itype = types.find((x) => x.id.toString() === event.target.value)!;
     setSelectedOption(selectedValue);
-    setFormData((prevFormData) => ({
+    setFormData((prevFormData: any) => ({
       ...prevFormData,
-      typeId: eventTypeMap[selectedValue],
+      typeId: selectedValue.id,
     }));
   };
 
@@ -281,19 +198,23 @@ function WritePost(
 
   const handleOption2Change = (event: any) => {
     const { value } = event.target;
-    setSelectedOption2(value);
-    if (value === "기타" || value === "개포 클러스터" || value === "서초 클러스터") {
+    const selectedLocation: Ilocation = locations.find((x) => x.code === event.target.value)!;
+    console.log(typeof (value), selectedLocation);
+    setSelectedOption2(selectedLocation);
+    if (selectedLocation.code === locations[0].code ||
+      selectedLocation.code === locations[1].code ||
+      selectedLocation.code === locations[2].code) {
       setshowLocationInputgaepo(true);
     } else {
       setshowLocationInputgaepo(false);
       setFormData((prevFormData) => ({
         ...prevFormData,
-        locationName: "",
+        dates: formData.dates,
       }));
     }
-    setFormData((prevFormData) => ({
+    setFormData((prevFormData: any) => ({
       ...prevFormData,
-      locationCode: placeTypeMap[value],
+      locationCode: selectedLocation,
     }));
   };
 
@@ -327,112 +248,115 @@ function WritePost(
         };
       });
     }
+    console.log(formData);
+    const response = writePost(formData);
   };
 
   return (
     <Container darkMode={darkMode}>
-      <Card darkMode={darkMode}>
-        <Heading darkMode={darkMode}>새로운 글 작성</Heading>
-        <Form onSubmit={handleSubmit}>
+      <Heading darkMode={darkMode}>새로운 글 작성</Heading>
+      <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <Input
+          type="text"
+          name="title"
+          placeholder="제목"
+          value={formData.title}
+          maxLength={100}
+          darkMode={darkMode}
+          onChange={handleInputChange}
+        />
+        <TextArea
+          name="context"
+          placeholder="글 작성"
+          value={formData.context}
+          onChange={handleInputChange}
+        />
+        <DatePickerInput
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            borderRadius: "3px",
+            height: "50px",
+            fontSize: "16px",
+            paddingLeft: "14px",
+          }}
+          containerStyle={{
+            width: "100%"
+          }}
+          darkMode={darkMode}
+          className={`rmdp-mobile bg-${mode} ${darkMode ? "default" : "default"}`}
+          multiple={!isRange}
+          range={isRange}
+          name="date"
+          placeholder="시작날짜 및 시각"
+          format="MM/DD/YYYY HH:mm:ss"
+          plugins={[
+            <TimePicker position="bottom" />,
+            <DatePanel markFocused />
+          ]}
+          value={selectDate.date.map(
+            ({ year, month, day, hour, minute }) =>
+              new Date(year, month - 1, day, hour, minute).toLocaleString("en-US", {
+                timeZone: "UTC",
+              })
+          )}
+          onChange={(value: any) =>
+            setSelectDate((prevFormData) => ({
+              ...prevFormData,
+              date: value,
+            }))
+          }
+          mobileButtons={[
+            {
+              label: "RESET",
+              className: "rmdp-button rmdp-action-button",
+              onClick: () => {
+                setSelectDate((prevFormData) => ({
+                  ...prevFormData,
+                  date: [],
+                }));
+              },
+            }
+          ]}
+        />
+        <CheckboxLabel>
+          <CheckboxInput type="checkbox" onChange={handleCheckboxChange} />
+          <CheckboxText>Range mode</CheckboxText>
+        </CheckboxLabel>
+        <Input
+          type="term"
+          name="term"
+          placeholder="기간(분)"
+          maxLength={20}
+          value={selectDate.term}
+          onChange={handleInputChangeTerm}
+        />
+        <Dropdown value={selectedOption} onChange={handleOptionChangeEvent}>
+          {types.map((type: Itype) => (
+            <option key={type.id} value={type.id}>
+              {type.title}
+            </option>
+          ))}
+        </Dropdown>
+        <Dropdown value={selectedOption2} onChange={handleOption2Change}>
+          {locations.map((location: Ilocation) => (
+            <option key={location.code} value={location.code}>
+              {location.title}
+            </option>
+          ))}
+        </Dropdown>
+        {showLocationInputgaepo && (
           <Input
             type="text"
-            name="title"
-            placeholder="제목"
-            value={formData.title}
+            name="locationName"
+            placeholder="장소"
             maxLength={100}
-            darkMode={darkMode}
+            value={formData.locationName}
             onChange={handleInputChange}
           />
-          <TextArea
-            name="context"
-            placeholder="글 작성"
-            value={formData.context}
-            onChange={handleInputChange}
-          />
-          <DatePickerInput
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              height: "26px"
-            }}
-            containerStyle={{
-              width: "100%"
-            }}
-            darkMode={darkMode}
-            className="rmdp-mobile"
-            multiple={!isRange}
-            range={isRange}
-            name="date"
-            placeholder="시작날짜 및 시각"
-            format="MM/DD/YYYY HH:mm:ss"
-            plugins={[
-              <TimePicker position="bottom" />,
-              <DatePanel markFocused />
-            ]}
-            value={selectDate.date.map(
-              ({ year, month, day, hour, minute }) =>
-                new Date(year, month - 1, day, hour, minute).toLocaleString("en-US", {
-                  timeZone: "UTC",
-                })
-            )}
-            onChange={(value: any) =>
-              setSelectDate((prevFormData) => ({
-                ...prevFormData,
-                date: value,
-              }))
-            }
-            mobileButtons={[
-              {
-                label: "RESET",
-                className: "rmdp-button rmdp-action-button",
-                onClick: () => {
-                  setSelectDate((prevFormData) => ({
-                    ...prevFormData,
-                    date: [],
-                  }));
-                },
-              }
-            ]}
-          />
-          <CheckboxLabel>
-            <CheckboxInput type="checkbox" onChange={handleCheckboxChange} />
-            <CheckboxText>Range mode</CheckboxText>
-          </CheckboxLabel>
-          <Input
-            type="term"
-            name="term"
-            placeholder="기간(분)"
-            maxLength={20}
-            value={selectDate.term}
-            onChange={handleInputChangeTerm}
-          />
-          <Dropdown value={selectedOption} onChange={handleOptionChangeEvent}>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Dropdown>
-          <Dropdown value={selectedOption2} onChange={handleOption2Change}>
-            {options2.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Dropdown>
-          {showLocationInputgaepo && (
-            <Input
-              type="text"
-              name="locationName"
-              placeholder="장소"
-              maxLength={100}
-              value={formData.locationName}
-              onChange={handleInputChange}
-            />
-          )}
-          <SubmitButton type="submit">Post</SubmitButton>
-        </Form>
-      </Card>
+        )}
+        <SubmitButton type="submit">제출</SubmitButton>
+      </Form>
     </Container>
   );
 }
@@ -442,15 +366,18 @@ export default WritePost;
 export function ContainerContents(
   props: {
     darkMode: boolean,
-    toggleDarkMode: Function
+    locations: Ilocation[],
+    types: Itype[]
   }
 ) {
-  const { darkMode, toggleDarkMode } = props;
+  const { darkMode, locations, types } = props;
   return (
     <Contents className="contents" darkMode={darkMode}>
-      <div>
-        <WritePost darkMode={darkMode} />
-      </div>
+      <WritePost
+        darkMode={darkMode}
+        locations={locations}
+        types={types}
+      />
     </Contents>
   );
 }
