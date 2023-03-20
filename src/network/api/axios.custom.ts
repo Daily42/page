@@ -5,7 +5,6 @@ import Ilocation from "../../interface/location.interface";
 import DateType from "../../enum/eventType.enum";
 import PlaceType from "../../enum/placeType.enum";
 import Ipost from "../../interface/post.interface";
-import { placeTypeToString } from "../../component/util/placeTypeToString";
 
 export const getEventsList = async () => {
   try {
@@ -92,9 +91,9 @@ export const writePost = async (data: Ipost) => {
     console.log(data);
     const rst: any = {
       title: data.title,
-      typeId: data.typeId,
+      typeId: parseInt(data.typeId, 10),
       context: data.context,
-      locationCode: data.locationCode?.code.toString(),
+      locationCode: `${data.locationCode}`,
       locationName: data.locationName,
       dates: data.dates
     }

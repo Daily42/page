@@ -121,6 +121,7 @@ export function ContainerNavMenu(
 ) {
   const { title, darkMode, toggleDarkMode } = props;
   const navigate = useNavigate();
+  const assetLink = "https://raw.githubusercontent.com/Daily42/page/master";
 
   function navigateTo(str: string) {
     navigate(str);
@@ -142,19 +143,19 @@ export function ContainerNavMenu(
       <ButtonContainer>
         <Button color="#FF605C">
           <ImgIcon
-            src="../../../public/asset/icon/exit.svg"
+            src={`${assetLink}/public/asset/icon/exit.svg`}
             alt="Exit Icon"
           />
         </Button>
         <Button color="#FFBD2E">
           <ImgIcon
-            src="../../../public/asset/icon/minimize.svg"
+            src={`${assetLink}/public/asset/icon/minimize.svg`}
             alt="Minimize Icon"
           />
         </Button>
         <Button color="#4CD964">
           <ImgIcon
-            src="../../../public/asset/icon/maximize.svg"
+            src={`${assetLink}/public/asset/icon/maximize.svg`}
             alt="Maximize Icon"
           />
         </Button>

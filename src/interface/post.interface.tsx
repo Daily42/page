@@ -3,7 +3,7 @@ import PlaceType from "../enum/placeType.enum";
 
 export default interface Ipost {
   title?: string,
-  typeId?: string,
+  typeId: string,
   context?: string,
   locationCode?: any,
   locationName?: string,

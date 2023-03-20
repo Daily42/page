@@ -10,7 +10,8 @@ import styled from "@emotion/styled";
 
 // MUI
 import { Button, Container, Grid, List, ListItem, ListItemText, makeStyles } from "@material-ui/core";
-import { FaMapMarkerAlt, FaClock, FaHourglassHalf } from "react-icons/fa";
+import { FaMapMarkerAlt, FaHourglassHalf } from "react-icons/fa";
+import { BsFillCircleFill } from "react-icons/bs";
 
 // Calendar picker
 import DatePicker from "react-multi-date-picker";
@@ -59,7 +60,7 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "baseline",
     justifyContent: "center",
-    height: "100vh",
+    height: "90vh",
     backgroundColor: "#f5f5f5",
     maxWidth: "none",
   },
@@ -179,6 +180,10 @@ function EventsList(
             <div>
               <FaHourglassHalf style={{ fontSize: "16px", opacity: 0.5, margin: 0 }} />&nbsp;
               {toTimeString(event?.dates[0]?.term)}
+            </div>
+            <div style={{ fontFamily: "OAGothic", fontSize: "0.8rem", margin: 0, color: `${event.type.color}` }}>
+              <BsFillCircleFill style={{ opacity: 0.8, borderRadius: "50%", color: `${event.type.color}`, fontSize: "12px", margin: 0, marginBottom: -3, }} />&nbsp;
+              {event.type.title}
             </div>
           </ListItemText>
         </ListItem>

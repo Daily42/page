@@ -13,5 +13,5 @@ export default interface Ievent {
   locationName: string;
   location: Ilocation;
   dates: Idate[];
-  type: Itype[];
+  type: Itype;
 }

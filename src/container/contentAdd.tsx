@@ -15,6 +15,7 @@ import Props from "../interface/props.interface";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import placeType from "../enum/placeType.enum";
 import Idate, { IDateObject } from "../interface/date.interface";
+import Ievent from "../interface/event.interface";
 import Ipost from "../interface/post.interface";
 import PlaceType from "../enum/placeType.enum";
 import Ilocation from "../interface/location.interface";
@@ -184,7 +185,7 @@ function WritePost(
   };
 
   const handleOptionChangeEvent = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue: Itype = types.find((x) => x.id.toString() === event.target.value)!;
+    const selectedValue: Itype = types.find((x: any) => x?.id.toString() === event.target.value)!;
     setSelectedOption(selectedValue);
     setFormData((prevFormData: any) => ({
       ...prevFormData,
@@ -254,6 +255,7 @@ function WritePost(
       });
     }
     writePost(formData).then((response) => {
+      console.log(response);
       alert("글 작성에 성공했습니다.");
       navigateTo("0");
     });
@@ -313,18 +315,6 @@ function WritePost(
               date: value,
             }))
           }
-          mobileButtons={[
-            {
-              label: "RESET",
-              className: "rmdp-button rmdp-action-button",
-              onClick: () => {
-                setSelectDate((prevFormData) => ({
-                  ...prevFormData,
-                  date: [],
-                }));
-              },
-            }
-          ]}
         />
         <CheckboxLabel>
           <CheckboxInput type="checkbox" onChange={handleCheckboxChange} />
