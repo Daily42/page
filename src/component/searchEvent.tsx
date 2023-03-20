@@ -21,8 +21,6 @@ import "react-multi-date-picker/styles/colors/teal.css"
 // API
 import {
   searchEvent,
-  getLocations,
-  getEventType
 } from "../network/api/axios.custom";
 
 // Interface & Enum
@@ -136,7 +134,10 @@ function EventsList(
   const [eventType, setEventType] = useState<Ievent[]>([]);
   const classes = useStyles2({ darkMode });
 
-  const toTimeString = (min: number) => {
+  const toTimeString = (min: number | undefined) => {
+    if (min == null) {
+      return "";
+    }
     const hours = Math.floor(min / 60);
     const hourString = hours > 0 ? `${hours} hours` : "";
     const minutes = min - hours * 60;
@@ -213,7 +214,7 @@ export function SearchEvents(
   // mui variables - location
 
   // api variables
-  const [locationCode, setLocationCode] = useState(null);
+  const [locationCode, setLocationCode] = useState();
   const [events, setEvents] = useState<Ievent[]>([]);
 
   // tmp
@@ -229,7 +230,7 @@ export function SearchEvents(
 
   // updated handleSearchButtonClick function
   const handleSearchButtonClick = async () => {
-    const eventResponse = await searchEvent(rangeDate.date[0], rangeDate.date[1], locationCode);
+    const eventResponse = await searchEvent(rangeDate.date[0], rangeDate.date[1], locationCode ?? null);
     if (eventResponse) {
       setEvents(eventResponse);
     }

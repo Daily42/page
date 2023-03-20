@@ -240,7 +240,7 @@ export function ContainerContents(
         <ButtonContainer>
           <LoginButton
             darkMode={darkMode}
-            href={`${backendSite}/auth/42?redirectUrl=http://localhost:3030`}
+            href={`${backendSite}/auth/42?redirectUrl=http://${window.location.host}`}
           >
             Login with 42 account
           </LoginButton>
