@@ -238,14 +238,14 @@ export function ContainerContents(
         </LogoContainer>
         <div style={{ width: "100%", height: "10%" }} />
         <ButtonContainer>
-          <LoginButton
+          {/*<LoginButton
             darkMode={darkMode}
             href={`${backendSite}/auth/42?redirectUrl=http://${window.location.host}`}
           >
             Login with 42 account
           </LoginButton>
           <br />
-          <br />
+          <br />*/}
           <Button
             darkMode={darkMode}
             onClick={() => { navigateTo("/search") }}
