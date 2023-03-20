@@ -7,5 +7,5 @@ export default interface Ipost {
   context?: string,
   locationCode?: any,
   locationName?: string,
-  dates?: Idate[],
+  dates?: any[],
 }

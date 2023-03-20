@@ -257,7 +257,7 @@ function WritePost(
     writePost(formData).then((response) => {
       console.log(response);
       alert("글 작성에 성공했습니다.");
-      navigateTo("0");
+      //   navigateTo("0");
     });
   };
 
